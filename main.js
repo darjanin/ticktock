@@ -227,7 +227,6 @@ const Fill = ({left, total, threshold}) => {
   )
 }
 
-// TODO if threshold is not specified than it's equal to time
 ReactDOM.render(
   <Timer time={6} style="clock"/>,
   document.getElementById('app')
