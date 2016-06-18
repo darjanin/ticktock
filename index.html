@@ -59,7 +59,9 @@
       cursor: pointer;
       font-family: 'Amatica SC', cursive;
       font-weight: normal;
-      transition: box-shadow .25s;
+      transition: all .25s;
+      margin: 0;
+      position: relative;
     }
     button:active,
     button.active,
@@ -80,12 +82,32 @@
       border-radius: 0;
       font-family: 'Amatica SC', cursive;
       font-weight: bold;
-      transition: box-shadow .25s;
+      transition: all .25s;
+      margin: 0;
+      position: relative;
     }
     input:focus,
     button:focus {
       outline: 0;
-      box-shadow: 0 0 2rem rgba(0,0,0,.5);
+      box-shadow: 0 0 2rem .4rem rgba(0, 0, 0, .4);
+      z-index: 2;
+    }
+
+    button + button,
+    button + input,
+    input + button,
+    input + input {
+      margin-left: 1rem;
+    }
+    p {
+      color: var(--light-color);
+      font-size: 2em;
+      text-align: center;
+    }
+    .overlay {
+      opacity: 1;
+      transition: opacity .25s;
+      background-color: rgba(0,0,0,.8);
     }
   </style>
 </head>

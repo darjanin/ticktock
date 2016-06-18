@@ -17,6 +17,7 @@ class Timer extends React.Component {
     this.state = {
       leftTime: this.props.time,
       running: false,
+      paused: false,
       time: this.props.time,
       style: this.props.style,
     }
@@ -24,21 +25,36 @@ class Timer extends React.Component {
 
   updateTimer() {
     if (this.state.leftTime === 0) {
+      this.stopTimer()
+    } else {
+      if (!this.state.paused) {
+        this.setState({leftTime: this.state.leftTime - 1})
+      }
+    }
+  }
+
+  stopTimer() {
+    if (this.timerRef) {
       clearInterval(this.timerRef)
       this.timerRef = null
       this.setState({
         leftTime: this.state.time,
         running: false,
       })
-    } else {
-      this.setState({leftTime: this.state.leftTime - 1})
     }
   }
 
   startTimer() {
     if (!this.timerRef) {
       this.timerRef = setInterval(this.updateTimer.bind(this), 1000)
-      this.setState({running: true})
+      this.setState({running: true, paused: false,})
+    }
+  }
+
+  restartTimer() {
+    if (this.timerRef) {
+      this.stopTimer()
+      this.startTimer()
     }
   }
 
@@ -55,7 +71,37 @@ class Timer extends React.Component {
     return (
       <div style={{height: '100vh'}}>
         {this.state.running ?
-          visual
+          <div
+            style={{
+              height: '100%',
+              position: 'relative',
+              cursor: this.state.running && !this.state.paused ? 'none' : 'default',
+            }}
+            onClick={() => {this.setState({paused: !this.state.paused})}}
+          >
+            {visual}
+            {this.state.paused && <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              className="overlay"
+            >
+              <div>
+                <p>Total time: {this.state.time} seconds</p>
+                <p>Left time: {this.state.leftTime} seconds</p>
+                <button onClick={() => {this.setState({paused: !this.state.paused})}}>Resume</button>
+                <button onClick={this.restartTimer.bind(this)}>Restart</button>
+                <button onClick={this.stopTimer.bind(this)}>Stop</button>
+              </div>
+            </div>}
+          </div>
           :
           <div style={{
               display: 'flex',
@@ -95,7 +141,7 @@ class Timer extends React.Component {
               </button>
             </div>
             <p style={{color: 'var(--light-color)', fontWeight: '400', fontSize: '2em', marginTop: 'auto'}}>
-              Created by <a href="https://github.com/darjanin">Milan Darjanin</a> in 2016
+              Created by <a href="https://github.com/darjanin">Milan Darjanin</a>. Enjoy using.
             </p>
           </div>
         }
