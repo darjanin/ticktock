@@ -14,7 +14,7 @@
   <style media="screen">
     :root {
       --light-color: #fff;
-      --dark-color: #b23;
+      --dark-color: #a12;
     }
     body {
       background-color: var(--dark-color);
@@ -30,10 +30,14 @@
       text-decoration: none;
       border-bottom: 1px dashed white;
     }
+    a:focus {
+      outline: none;
+      border-bottom-style: solid;
+    }
 
     circle {
       stroke: var(--light-color);
-      fill: #b45;
+      fill: #c34;
       transition: stroke-dasharray .25s linear;
     }
 
@@ -48,19 +52,23 @@
     button {
       border: 1px solid var(--light-color);
       padding: .5em 1em;
-      background-color: transparent;
+      background-color: var(--dark-color);
       color: var(--light-color);
       font-size: 2em;
       transition: background-color .25s;
       cursor: pointer;
       font-family: 'Amatica SC', cursive;
       font-weight: normal;
+      transition: box-shadow .25s;
     }
     button:active,
     button.active,
     button:hover {
       background-color: var(--light-color);
       color: var(--dark-color);
+    }
+    button:focus {
+      box-shadow: 0 0 2rem rgba(0,0,0,.5);
     }
     input {
       font-size: 2em;
@@ -72,6 +80,12 @@
       border-radius: 0;
       font-family: 'Amatica SC', cursive;
       font-weight: bold;
+      transition: box-shadow .25s;
+    }
+    input:focus,
+    button:focus {
+      outline: 0;
+      box-shadow: 0 0 2rem rgba(0,0,0,.5);
     }
   </style>
 </head>

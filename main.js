@@ -7,8 +7,7 @@ const msg = {
       fill: 'Fill screen'
     }
   },
-  end: 'End',
-  time: (time) => `${time} sec`
+  time: (time) => time > 0 ? `${time}` : 'End'
 }
 
 class Timer extends React.Component {
@@ -19,7 +18,6 @@ class Timer extends React.Component {
       leftTime: this.props.time,
       running: false,
       time: this.props.time,
-      radius: Math.floor(window.innerHeight / ((1 + Math.sqrt(5)) / 2) / 2),
       style: this.props.style,
     }
   }
@@ -48,16 +46,11 @@ class Timer extends React.Component {
     const props = {
       left: this.state.leftTime,
       total: this.state.time,
-      threshold: this.props.threshold,
+      threshold: Math.floor(this.state.time * 0.4),
     }
     let visual = this.state.style === 'clock'
-      ? <Clock
-          radius={this.state.radius}
-          {...props}
-        />
-      : <Fill
-          {...props}
-        />
+      ? <Clock {...props} />
+      : <Fill {...props} />
 
     return (
       <div style={{height: '100vh'}}>
@@ -111,7 +104,8 @@ class Timer extends React.Component {
   }
 }
 
-const Clock = ({radius, left, total, threshold}) => {
+const Clock = ({left, total, threshold}) => {
+  const radius = Math.floor(window.innerHeight / ((1 + Math.sqrt(5)) / 2) / 2)
   const ratio = 1 - left / total
 
   return (
@@ -123,9 +117,10 @@ const Clock = ({radius, left, total, threshold}) => {
             cx={radius}
             cy={radius}
             strokeWidth={2 * radius}
-            style={
-              {strokeDasharray: `${2 * radius * Math.PI * ratio} ${2 * radius * Math.PI * (1 - ratio)}`}
-            }
+            style={{
+              strokeDasharray: `${2 * radius * Math.PI * ratio} ${2 * radius * Math.PI * (1 - ratio)}`,
+              stroke: ratio === 0 ? 'transparent' : 'var(--light-color)',
+            }}
           />
         </svg>
         <div
@@ -143,7 +138,7 @@ const Clock = ({radius, left, total, threshold}) => {
             transition: 'color 1s',
           }}
         >
-          {left <= threshold && left}
+          {left <= threshold && msg.time(left)}
         </div>
       </div>
     </div>
@@ -180,7 +175,7 @@ const Fill = ({left, total, threshold}) => {
           transition: 'color 1s',
         }}
       >
-        {left <= threshold && left}
+        {left <= threshold && msg.time(left)}
       </div>
     </div>
   )
@@ -188,6 +183,6 @@ const Fill = ({left, total, threshold}) => {
 
 // TODO if threshold is not specified than it's equal to time
 ReactDOM.render(
-  <Timer time={6} threshold={6} style="clock"/>,
+  <Timer time={6} style="clock"/>,
   document.getElementById('app')
 );
