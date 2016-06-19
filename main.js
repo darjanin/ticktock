@@ -1,4 +1,7 @@
 const msg = {
+  helpers: {
+    plural: (word, count) => count > 1 ? `${word}s` : word
+  },
   controls: {
     timeInput: (time) => `${time} seconds`,
     start: 'Start time',
@@ -7,7 +10,13 @@ const msg = {
       fill: 'Fill screen'
     }
   },
-  time: (time) => time > 0 ? `${time}` : 'End'
+  timeLeft: (time) => time > 0 ? `${time}` : 'End',
+  time: (time) => {
+    const {helpers: {plural}} = msg
+    const m = Math.floor(time / 60)
+    const s = time % 60
+    return `${m > 0 ? `${m} ${plural('minute', m)} ` : ''}${s} ${plural('second', s)}`
+  }
 }
 
 class Timer extends React.Component {
@@ -58,6 +67,17 @@ class Timer extends React.Component {
     }
   }
 
+  setTime(e) {
+    const regexp = /\d+\ *[m|s]/g
+    const timeComponents = e.target.value.match(regexp)
+    const time = timeComponents ? timeComponents.reduce((total, component) => {
+      if (component.indexOf('m') !== -1) return total + parseInt(component) * 60
+      else if (component.indexOf('s') !== -1) return total + parseInt(component)
+      return total + 0;
+    }, 0) : 0
+    this.setState({time: time, leftTime: time})
+  }
+
   render() {
     const props = {
       left: this.state.leftTime,
@@ -94,8 +114,8 @@ class Timer extends React.Component {
               className="overlay"
             >
               <div>
-                <p>Total time: {this.state.time} seconds</p>
-                <p>Left time: {this.state.leftTime} seconds</p>
+                <p>Total time: {msg.time(this.state.time)}</p>
+                <p>Left time: {msg.time(this.state.leftTime)}</p>
                 <button onClick={() => {this.setState({paused: !this.state.paused})}}>Resume</button>
                 <button onClick={this.restartTimer.bind(this)}>Restart</button>
                 <button onClick={this.stopTimer.bind(this)}>Stop</button>
@@ -113,15 +133,9 @@ class Timer extends React.Component {
             <h1 style={{color: 'var(--light-color)', fontSize: '4em', marginTop: 'auto'}}>Tick, Tock, &hellip;</h1>
             <div style={{marginBottom: '2rem'}}>
               <input
-                type="number"
-                inputmode="numeric"
-                min={1}
-                placeholder={`${this.state.time} seconds`}
-                onChange={(e) => {
-                    const time = parseInt(e.target.value) || 0
-                    this.setState({time: time, leftTime: time})
-                  }
-                }
+                type="text"
+                placeholder={msg.time(this.state.time)}
+                onChange={this.setTime.bind(this)}
               />
               {
                 ['clock', 'fill'].map((style) => (
@@ -135,10 +149,11 @@ class Timer extends React.Component {
                 ))
               }
             </div>
-            <div>
-              <button onClick={this.startTimer.bind(this)}>
+            <div style={{textAlign: 'center'}}>
+              <button onClick={this.startTimer.bind(this)} className="startButton">
                 {msg.controls.start}
               </button>
+              <p className="note">NOTE: To pause click anywhere while running.</p>
             </div>
             <p style={{color: 'var(--light-color)', fontWeight: '400', fontSize: '2em', marginTop: 'auto'}}>
               Created by <a href="https://github.com/darjanin">Milan Darjanin</a>. Enjoy using.
@@ -176,7 +191,7 @@ const Clock = ({left, total, threshold}) => {
             right: 0,
             top: 0,
             bottom: 0,
-            color: `var(${left / total > 0.5 ? '--light-color' : '--dark-color'})`,
+            color: 'black' || `var(${left / total > 0.5 ? '--light-color' : '--dark-color'})`,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -184,7 +199,7 @@ const Clock = ({left, total, threshold}) => {
             transition: 'color 1s',
           }}
         >
-          {left <= threshold && msg.time(left)}
+          {left <= threshold && msg.timeLeft(left)}
         </div>
       </div>
     </div>
@@ -212,7 +227,7 @@ const Fill = ({left, total, threshold}) => {
           left: 0,
           right: 0,
           top: 0,
-          color: `var(${left / total > 0.5 ? '--light-color' : '--dark-color'})`,
+          color: 'black' || `var(${left / total > 0.5 ? '--light-color' : '--dark-color'})`,
           bottom: 0,
           display: 'flex',
           alignItems: 'center',
@@ -221,13 +236,13 @@ const Fill = ({left, total, threshold}) => {
           transition: 'color 1s',
         }}
       >
-        {left <= threshold && msg.time(left)}
+        {left <= threshold && msg.timeLeft(left)}
       </div>
     </div>
   )
 }
 
 ReactDOM.render(
-  <Timer time={6} style="clock"/>,
+  <Timer time={61} style="clock"/>,
   document.getElementById('app')
 );

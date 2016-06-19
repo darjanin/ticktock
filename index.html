@@ -89,7 +89,7 @@
     input:focus,
     button:focus {
       outline: 0;
-      box-shadow: 0 0 2rem .4rem rgba(0, 0, 0, .4);
+      box-shadow: .65rem .6rem 0 rgba(0, 0, 0, .3);
       z-index: 2;
     }
 
@@ -108,6 +108,14 @@
       opacity: 1;
       transition: opacity .25s;
       background-color: rgba(0,0,0,.8);
+    }
+    .note {
+      opacity: 0.2;
+      transition: opacity .25s;
+    }
+    .startButton:hover + .note,
+    .startButton:focus + .note {
+      opacity: 0.8;
     }
   </style>
 </head>
