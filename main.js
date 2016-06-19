@@ -32,6 +32,16 @@ class Timer extends React.Component {
     }
   }
 
+  componentDidMount() {
+    window.addEventListener('keypress', (e) => {
+      if (this.state.running && (e.keyCode === 0 || e.keyCode === 32)) {
+        this.setState({paused: !this.state.paused})
+      } else if (!this.state.running && (e.keyCode === 13)) {
+        this.startTimer()
+      }
+    })
+  }
+
   updateTimer() {
     if (this.state.leftTime === 0) {
       this.stopTimer()
@@ -153,7 +163,8 @@ class Timer extends React.Component {
               <button onClick={this.startTimer.bind(this)} className="startButton">
                 {msg.controls.start}
               </button>
-              <p className="note">NOTE: To pause click anywhere while running.</p>
+              <p className="note">NOTE: To pause click anywhere or press <kbd>Space</kbd> while running.</p>
+              <p className="note">NOTE2: Press <kbd>Return</kbd> to start timer.</p>
             </div>
             <p style={{color: 'var(--light-color)', fontWeight: '400', fontSize: '2em', marginTop: 'auto'}}>
               Created by <a href="https://github.com/darjanin">Milan Darjanin</a>. Enjoy using.

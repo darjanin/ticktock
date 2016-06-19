@@ -10,7 +10,7 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react-dom.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"></script>
   <script type="text/babel" src="main.js"></script>
-  <link href="https://fonts.googleapis.com/css?family=Amatica+SC" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Amatica+SC:400,700" rel="stylesheet">
   <style media="screen">
     :root {
       --light-color: #fff;
@@ -21,7 +21,7 @@
       font-size: 100%;
       font-family: 'Amatica SC', cursive;
       height: 100vh;
-      font-weight: bold;
+      font-weight: normal;
       margin: 0 auto;
     }
 
@@ -29,6 +29,10 @@
       color: white;
       text-decoration: none;
       border-bottom: 1px dashed white;
+      transition: all .25s;
+    }
+    a:hover {
+      border-bottom-style: solid;
     }
     a:focus {
       outline: none;
@@ -111,12 +115,22 @@
     }
     .note {
       color: var(--light-color);
-      opacity: 0.2;
+      opacity: 0.4;
       transition: opacity .25s;
     }
-    .startButton:hover + .note,
-    .startButton:focus + .note {
+    .startButton:hover ~ .note,
+    .startButton:focus ~ .note {
       opacity: 0.8;
+    }
+    kbd {
+      font-family: 'Amatica SC', cursive;
+      font-weight: bold;
+    }
+    kbd::before {
+      content: '[';
+    }
+    kbd::after {
+      content: ']';
     }
   </style>
 </head>
