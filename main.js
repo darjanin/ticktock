@@ -247,7 +247,7 @@ const Fill = ({left, total, threshold}) => {
           transition: 'color 1s',
         }}
       >
-        {left <= threshold && msg.timeLeft(left)}
+        {msg.time(left)}
       </div>
     </div>
   )
