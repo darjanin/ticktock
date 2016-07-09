@@ -210,7 +210,7 @@ const Clock = ({left, total, threshold}) => {
             transition: 'color 1s',
           }}
         >
-          {msg.timeLeft(left)}
+          {msg.time(left)}
         </div>
       </div>
     </div>
