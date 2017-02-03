@@ -15,7 +15,7 @@ const msg = {
     const {helpers: {plural}} = msg
     const m = Math.floor(time / 60)
     const s = time % 60
-    return `${m > 0 ? `${m} ${plural('minute', m)} ` : ''}${s} ${plural('second', s)}`
+    return `${m > 0 ? `${m}` : ''}:${s}`
   }
 }
 
@@ -210,7 +210,7 @@ const Clock = ({left, total, threshold}) => {
             transition: 'color 1s',
           }}
         >
-          {left <= threshold && msg.timeLeft(left)}
+          {msg.time(left)}
         </div>
       </div>
     </div>
@@ -247,7 +247,7 @@ const Fill = ({left, total, threshold}) => {
           transition: 'color 1s',
         }}
       >
-        {left <= threshold && msg.timeLeft(left)}
+        {msg.time(left)}
       </div>
     </div>
   )
